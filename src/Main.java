@@ -9,6 +9,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        long inicio = System.currentTimeMillis();
+
+
         UserHandler my_handler = new UserHandler();
         ODEMSAXParser parser = null;
 
@@ -26,36 +29,33 @@ public class Main {
         HashMap<String, String> pkgs = my_handler.getPKGS();
         HashMap<String, ArrayList<String>> dep = my_handler.getDependencies();
 
-//        for(String key: pkgs.keySet()){
-//            System.out.println("Class: " + key);
-//            System.out.println("Package: " + pkgs.get(key) + "\n");
-//        }
-////
-////        System.out.println("\n############################################################################\n");
-////
-////        for(String key: dep.keySet()){
-////            System.out.println("Class: " + key);
-////            for(String class_name: dep.get(key)) {
-////                System.out.println("     Dependency:" + class_name);
-////            }
-////        }
-
 
         HashMap<String, ArrayList<String>> pkg_graph = new HashMap<>();
         for (String class_name: pkgs.keySet()){
 
-            ArrayList<String> pkg_dep = new ArrayList<>();
-            for (String dependency: dep.get(class_name)) {
-                if (!pkg_dep.contains(pkgs.get(dependency)))
-                    if ((pkgs.get(dependency) != null)
-                            && (!dependency.startsWith("java."))
-                            && (!dependency.contains("$"))
-                            && (pkgs.get(dependency) != pkgs.get(class_name)))
+            if (!pkg_graph.containsKey(pkgs.get(class_name))){
+                ArrayList<String> pkg_dep = new ArrayList<>();
+                for (String dependency : dep.get(class_name)) {
+                    if (!pkg_dep.contains(pkgs.get(dependency)))
+                        if ((pkgs.get(dependency) != null)
+                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
+                            pkg_dep.add(pkgs.get(dependency));
 
-                        pkg_dep.add(pkgs.get(dependency));
+                }
+
+                pkg_graph.putIfAbsent(pkgs.get(class_name), pkg_dep);
             }
+            else{
+                for (String dependency : dep.get(class_name)) {
+                    if (!pkg_graph.get(pkgs.get(class_name)).contains(pkgs.get(dependency))) {
+                        if ((pkgs.get(dependency) != null)
+                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
 
-            pkg_graph.putIfAbsent(pkgs.get(class_name), pkg_dep);
+                            pkg_graph.get(pkgs.get(class_name)).add(pkgs.get(dependency));
+                    }
+
+                }
+            }
 
         }
 
@@ -68,6 +68,7 @@ public class Main {
             System.out.println("\n");
         }
 
-
+        long fin = System.currentTimeMillis();
+        System.out.println("Demora de generacion de grafo (milis): " + (fin - inicio));
     }
 }

@@ -30,15 +30,15 @@ public class Main {
 //            System.out.println("Class: " + key);
 //            System.out.println("Package: " + pkgs.get(key) + "\n");
 //        }
-//
-//        System.out.println("\n############################################################################\n");
-//
-//        for(String key: dep.keySet()){
-//            System.out.println("Class: " + key);
-//            for(String class_name: dep.get(key)) {
-//                System.out.println("     Dependency:" + class_name);
-//            }
-//        }
+////
+////        System.out.println("\n############################################################################\n");
+////
+////        for(String key: dep.keySet()){
+////            System.out.println("Class: " + key);
+////            for(String class_name: dep.get(key)) {
+////                System.out.println("     Dependency:" + class_name);
+////            }
+////        }
 
 
         HashMap<String, ArrayList<String>> pkg_graph = new HashMap<>();

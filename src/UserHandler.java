@@ -1,0 +1,68 @@
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class UserHandler extends DefaultHandler {
+
+    boolean type = false;
+    boolean depends_on = false;
+
+    HashMap<String, String> packages = new HashMap<>();
+    HashMap<String, ArrayList<String>> dependencies = new HashMap<>();
+    String current_pkg;
+    String current_class;
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+
+        if (qName.equalsIgnoreCase("namespace")) {
+            this.current_pkg = attributes.getValue("name");
+//            System.out.println("[START]\n Package name : " + this.current_pkg);
+        }
+        else
+            if (qName.equalsIgnoreCase("type")) {
+                this.current_class = attributes.getValue("name");
+                this.packages.putIfAbsent(this.current_class, this.current_pkg);
+                this.dependencies.putIfAbsent(this.current_class, new ArrayList<>());
+//                System.out.println("Class : " + this.current_class);
+                type = true;
+            }
+        else
+            if (qName.equalsIgnoreCase("depends-on")) {
+                String class_name = attributes.getValue("name");
+                if (class_name != null)
+                    this.dependencies.get(this.current_class).add(class_name);
+//                System.out.println("Dependency : " + class_name);
+                depends_on = true;
+            }
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (qName.equalsIgnoreCase("namespace")) {
+            this.current_pkg = "";
+        }
+        else
+            if (qName.equalsIgnoreCase("type")) {
+                this.current_class = "";
+                this.type = false;
+            }
+        else
+            if (qName.equalsIgnoreCase("lastname"))
+                depends_on = false;
+
+
+    }
+
+    public HashMap getPKGS(){
+        return this.packages;
+    }
+
+    public HashMap getDependencies(){
+        return this.dependencies;
+    }
+
+}

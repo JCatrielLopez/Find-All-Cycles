@@ -32,12 +32,14 @@ public class Graph {
 
     public void addEdge(Node first, Node end){
         if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
+            if (!this.elements.get(first).contains(end))
                 this.elements.get(first).add(end);
         }
     }
 
-    public void removeEdge(String first, String end){
+    public void removeEdge(Node first, Node end){
         if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
+            if (this.elements.get(first).contains(end))
                 this.elements.get(first).remove(end);
         }
     }
@@ -59,6 +61,24 @@ public class Graph {
             }
             System.out.println(" -------------------------- ");
         }
+    }
+
+    public boolean contains(String name){
+        for(Node nodo: this.elements.keySet()){
+            if (nodo.getName().equals(name))
+                return true;
+        }
+
+        return false;
+    }
+
+    public Node get(String name){
+        for(Node nodo: this.elements.keySet()){
+            if (nodo.getName().equals(name))
+                return nodo;
+        }
+
+        return null;
     }
 
 }

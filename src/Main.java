@@ -30,43 +30,60 @@ public class Main {
         HashMap<String, ArrayList<String>> dep = my_handler.getDependencies();
 
 
-        HashMap<String, ArrayList<String>> pkg_graph = new HashMap<>();
-        for (String class_name: pkgs.keySet()){
+//        HashMap<String, ArrayList<String>> pkg_graph = new HashMap<>();
+//        for (String class_name: pkgs.keySet()){
+//
+//            if (!pkg_graph.containsKey(pkgs.get(class_name))){
+//                ArrayList<String> pkg_dep = new ArrayList<>();
+//                for (String dependency : dep.get(class_name)) {
+//                    if (!pkg_dep.contains(pkgs.get(dependency)))
+//                        if ((pkgs.get(dependency) != null)
+//                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
+//                            pkg_dep.add(pkgs.get(dependency));
+//
+//                }
+//
+//                pkg_graph.putIfAbsent(pkgs.get(class_name), pkg_dep);
+//            }
+//            else{
+//                for (String dependency : dep.get(class_name)) {
+//                    if (!pkg_graph.get(pkgs.get(class_name)).contains(pkgs.get(dependency))) {
+//                        if ((pkgs.get(dependency) != null)
+//                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
+//
+//                            pkg_graph.get(pkgs.get(class_name)).add(pkgs.get(dependency));
+//                    }
+//
+//                }
+//            }
+//
+//        }
 
-            if (!pkg_graph.containsKey(pkgs.get(class_name))){
-                ArrayList<String> pkg_dep = new ArrayList<>();
-                for (String dependency : dep.get(class_name)) {
-                    if (!pkg_dep.contains(pkgs.get(dependency)))
-                        if ((pkgs.get(dependency) != null)
-                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
-                            pkg_dep.add(pkgs.get(dependency));
+        Graph graph = new Graph();
 
-                }
-
-                pkg_graph.putIfAbsent(pkgs.get(class_name), pkg_dep);
-            }
-            else{
-                for (String dependency : dep.get(class_name)) {
-                    if (!pkg_graph.get(pkgs.get(class_name)).contains(pkgs.get(dependency))) {
-                        if ((pkgs.get(dependency) != null)
-                                && (!pkgs.get(dependency).equals(pkgs.get(class_name))))
-
-                            pkg_graph.get(pkgs.get(class_name)).add(pkgs.get(dependency));
+        for(String node_name: pkgs.keySet()){
+            Node node = new Node(pkgs.get(node_name));
+            graph.addElement(node);
+            for(String ady_name: dep.get(node_name)){
+                if ((pkgs.get(ady_name) != null)){
+                    Node ady;
+                    if (graph.contains(pkgs.get(ady_name))){
+                        ady = graph.get(pkgs.get(ady_name));
                     }
+                    else
+                        ady = new Node(pkgs.get(ady_name));
 
+                    if (!ady.equals(node)){
+                        graph.addElement(ady);
+                        graph.addEdge(node, ady);
+                    }
                 }
             }
-
         }
 
-        for(String pkg: pkg_graph.keySet()){
-            System.out.println("Nodo: " + pkg);
-            for(String dp: pkg_graph.get(pkg)){
-                System.out.println("Adyacentes: " + dp);
-            }
+        graph.print();
+        System.out.println(graph.getSize());
 
-            System.out.println("\n");
-        }
 
         long fin = System.currentTimeMillis();
         System.out.println("Demora de generacion de grafo (milis): " + (fin - inicio));

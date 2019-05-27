@@ -46,6 +46,10 @@ public class Graph {
         return this.size;
     }
 
+    public ArrayList<Node> getAdy(Node node){
+        return this.elements.get(node);
+    }
+
     public void print(){
         for (Node nodo: this.elements.keySet()){
             System.out.println("NODO: " + nodo.toString());
@@ -53,6 +57,7 @@ public class Graph {
             for(Node adyacentes: this.elements.get(nodo)){
                 System.out.println(adyacentes.toString());
             }
+            System.out.println(" -------------------------- ");
         }
     }
 

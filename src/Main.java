@@ -13,12 +13,12 @@ public class Main {
 
 
         UserHandler my_handler = new UserHandler();
-        ODEMSAXParser parser = null;
+        ODEMSAXParser parser;
 
         try {
 
             parser = new ODEMSAXParser(my_handler,
-                    "/home/catriel/IdeaProjects/tp_final_java/odems/apache-cxf-2.0.6.odem");
+                    "odems/apache-cxf-2.0.6.odem");
             parser.parse();
 
         } catch (ParserConfigurationException | IOException | SAXException e ) {

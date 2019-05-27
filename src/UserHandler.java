@@ -12,6 +12,7 @@ public class UserHandler extends DefaultHandler {
 
     HashMap<String, String> packages = new HashMap<>();
     HashMap<String, ArrayList<String>> dependencies = new HashMap<>();
+    HashMap<String, ArrayList<String>> pkg_dep = new HashMap<>();
     String current_pkg;
     String current_class;
 
@@ -58,7 +59,15 @@ public class UserHandler extends DefaultHandler {
     }
 
     public HashMap getPKGS(){
-        return this.packages;
+
+        for(String clase: this.dependencies.keySet()){
+            if (!this.pkg_dep.containsKey(this.packages.get(clase)))
+                this.pkg_dep.put(this.packages.get(clase), new ArrayList<>());
+            for(String dep: this.dependencies.get(clase)){
+                this.pkg_dep.get(this.packages.get(clase)).add(this.packages.get(dep));
+            }
+        }
+        return this.pkg_dep;
     }
 
     public HashMap getDependencies(){

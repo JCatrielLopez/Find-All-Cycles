@@ -26,8 +26,8 @@ public class Main {
         }
 
 
-        HashMap<String, String> pkgs = my_handler.getPKGS();
-        HashMap<String, ArrayList<String>> dep = my_handler.getDependencies();
+        HashMap<String, ArrayList<String>> pkgs = my_handler.getPKGS();
+//        HashMap<String, ArrayList<String>> dep = my_handler.getDependencies();
 
 
 //        HashMap<String, ArrayList<String>> pkg_graph = new HashMap<>();
@@ -61,20 +61,25 @@ public class Main {
 
         Graph graph = new Graph();
 
-        for(String node_name: pkgs.keySet()){
-            Node node = new Node(pkgs.get(node_name));
+
+        for(String pkg: pkgs.keySet()){
+            Node node = new Node(pkg);
             graph.addElement(node);
-            for(String ady_name: dep.get(node_name)){
-                if ((pkgs.get(ady_name) != null)){
+            System.out.println("NODO: " + node.toString());
+            for(String pkg_ady: pkgs.get(pkg)){
+                if ((pkg_ady != null)){
                     Node ady;
-                    if (graph.contains(pkgs.get(ady_name))){
-                        ady = graph.get(pkgs.get(ady_name));
+                    if (graph.contains(pkg_ady)){
+                        ady = graph.get(pkg_ady);
+                        System.out.println("El adyacente ya existe " + ady.toString());
                     }
-                    else
-                        ady = new Node(pkgs.get(ady_name));
+                    else {
+                        ady = new Node(pkg_ady);
+                        graph.addElement(ady);
+                        System.out.println("El adyacente no existe " + ady.toString());
+                    }
 
                     if (!ady.equals(node)){
-                        graph.addElement(ady);
                         graph.addEdge(node, ady);
                     }
                 }
@@ -82,7 +87,8 @@ public class Main {
         }
 
         graph.print();
-        System.out.println(graph.getSize());
+
+        System.out.println("\nSize: " + graph.getSize());
 
 
         long fin = System.currentTimeMillis();

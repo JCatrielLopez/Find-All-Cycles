@@ -6,19 +6,15 @@ public class Graph {
     HashMap<Node, ArrayList<Node>> elements;
 
     int size;
-    int last;
 
     public Graph(){
         this.elements = new HashMap<>();
         this.size = 0;
-        this.last = 0;
     }
 
     public void addElement(Node name){
         if (!this.elements.containsKey(name)) {
-            name.setId(last);
             this.elements.putIfAbsent(name, new ArrayList<>());
-            last++;
             size++;
         }
     }

@@ -4,10 +4,12 @@ public class Node {
 
     private int id;
     private String name;
+    static int cont = 1;
 
     public Node(String name){
-        this.id = -1;
+        this.id = cont;
         this.name = name;
+        cont++;
     }
 
     public int getId() {

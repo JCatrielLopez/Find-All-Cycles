@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TarjanStronglyConnectedComponent {
+public class TarjanSCC {
 
     private Map<Node, Integer> visitedTime;
     private Map<Node, Integer> lowTime;

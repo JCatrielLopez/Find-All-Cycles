@@ -53,13 +53,19 @@ public class Main {
             }
         }
 
-        graph.print();
-        System.out.println("Nodes: " + graph.getSize());
-        System.out.println("Edges: " + graph.edgesSize());
-        System.out.println(" -------------------------- \n");
+//        graph.print();
+//        System.out.println("Nodes: " + graph.getSize());
+//        System.out.println("Edges: " + graph.edgesSize());
+//        System.out.println(" -------------------------- \n");
 
 
         long fin = System.currentTimeMillis();
         System.out.println("Demora de generacion de grafo (milis): " + (fin - inicio));
+
+
+        System.out.println(" ############################### ");
+        ArrayList<ArrayList<Node>> cycles = graph.find_all_cycles(10);
+
+        System.out.println(cycles);
     }
 }

@@ -3,14 +3,15 @@ import java.util.HashMap;
 
 public class Graph {
 
-    HashMap<Node, ArrayList<Node>> elements;
-    ArrayList<Edge> edges;
+    private HashMap<Node, ArrayList<Node>> elements;
+    private ArrayList<Edge> edges;
 
-    int size;
+    private int size;
 
     public Graph(){
         this.elements = new HashMap<>();
         this.size = 0;
+        this.edges = new ArrayList<>();
     }
 
     public void addElement(Node name){
@@ -27,7 +28,7 @@ public class Graph {
         }
 
         for(Edge edge: this.edges){
-            if (edge.contains(name)){
+            if (edge.contains(name.getId())){
                 this.edges.remove(edge);
             }
         }
@@ -37,19 +38,14 @@ public class Graph {
         if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
             if (!this.elements.get(first).contains(end)) {
                 this.elements.get(first).add(end);
-                Edge edge = new Edge(first, end);
-                this.edges.add(edge);
+                this.edges.add(new Edge(first.getId(), end.getId()));
             }
         }
     }
 
-    public void removeEdge(Node first, Node end){
-        if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
-            if (this.elements.get(first).contains(end)) {
-                this.elements.get(first).remove(end);
-                Edge edge = new Edge(first, end);
-                this.edges.remove(edge);
-            }
+    public void removeEdge(Edge edge){
+        if (this.edges.contains(edge)){
+            this.edges.remove(edge);
         }
     }
 
@@ -90,25 +86,8 @@ public class Graph {
         return null;
     }
 
-
-    public Node getNode(int id){
-        for(Node nodo: this.elements.keySet()){
-            if (nodo.getId()==id)
-                return nodo;
-        }
-        return null;
+    public int edgesSize(){
+        return this.edges.size();
     }
-
-    public ArrayList<Node> getNodes(){
-        ArrayList<Node> nodes= new ArrayList<>();
-        for(Node node: elements.keySet())
-            nodes.add(node);
-        return nodes;
-    }
-
-    public ArrayList<Edge> getEdges(){
-        return edges;
-    }
-    //si soy re sida y lo hago asi nomas
 
 }

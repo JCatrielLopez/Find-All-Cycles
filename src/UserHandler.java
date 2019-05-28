@@ -21,14 +21,12 @@ public class UserHandler extends DefaultHandler {
 
         if (qName.equalsIgnoreCase("namespace")) {
             this.current_pkg = attributes.getValue("name");
-//            System.out.println("[START]\n Package name : " + this.current_pkg);
         }
         else
             if (qName.equalsIgnoreCase("type")) {
                 this.current_class = attributes.getValue("name");
                 this.packages.putIfAbsent(this.current_class, this.current_pkg);
                 this.dependencies.putIfAbsent(this.current_class, new ArrayList<>());
-//                System.out.println("Class : " + this.current_class);
                 type = true;
             }
         else
@@ -36,7 +34,6 @@ public class UserHandler extends DefaultHandler {
                 String class_name = attributes.getValue("name");
                 if (class_name != null)
                     this.dependencies.get(this.current_class).add(class_name);
-//                System.out.println("Dependency : " + class_name);
                 depends_on = true;
             }
     }

@@ -1,6 +1,5 @@
 import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +20,7 @@ public class Main {
 
         try {
 
-            parser = new ODEMSAXParser(my_handler,
-                    "odems/apache-cxf-2.0.6.odem");
+            parser = new ODEMSAXParser(my_handler, "odems/hibernate-core-4.0.0.Final.odem");
             parser.parse();
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -56,7 +54,8 @@ public class Main {
         }
 
         graph.print();
-        System.out.println("Size: " + graph.getSize());
+        System.out.println("Nodes: " + graph.getSize());
+        System.out.println("Edges: " + graph.edgesSize());
         System.out.println(" -------------------------- \n");
 
 

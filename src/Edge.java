@@ -2,19 +2,19 @@ import java.util.Objects;
 
 public class Edge {
 
-    int first;
-    int second;
+    Node first;
+    Node second;
 
-    public Edge(int first, int second) {
+    public Edge(Node first, Node second) {
         this.first = first;
         this.second = second;
     }
 
-    public int getFirst() {
+    public Node getFirst() {
         return first;
     }
 
-    public int getSecond() {
+    public Node getSecond() {
         return second;
     }
 
@@ -23,8 +23,8 @@ public class Edge {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Edge edge = (Edge) o;
-        return first == edge.first &&
-                second == edge.second;
+        return first.equals(edge.first) &&
+                second.equals(edge.second);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class Edge {
         return Objects.hash(first, second);
     }
 
-    public boolean contains(int id) {
-        return (this.first==id || this.second==id);
+    public boolean contains(Node node){
+        return (first.equals(node)|| second.equals(node));
     }
 }
 

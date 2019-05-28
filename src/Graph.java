@@ -27,7 +27,7 @@ public class Graph {
         }
 
         for(Edge edge: this.edges){
-            if (edge.contains(name.getId())){
+            if (edge.contains(name)){
                 this.edges.remove(edge);
             }
         }
@@ -37,7 +37,7 @@ public class Graph {
         if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
             if (!this.elements.get(first).contains(end)) {
                 this.elements.get(first).add(end);
-                Edge edge = new Edge(first.getId(), end.getId());
+                Edge edge = new Edge(first, end);
                 this.edges.add(edge);
             }
         }
@@ -47,7 +47,7 @@ public class Graph {
         if ((this.elements.containsKey(first) && this.elements.containsKey(end))){
             if (this.elements.get(first).contains(end)) {
                 this.elements.get(first).remove(end);
-                Edge edge = new Edge(first.getId(), end.getId());
+                Edge edge = new Edge(first, end);
                 this.edges.remove(edge);
             }
         }
@@ -89,5 +89,26 @@ public class Graph {
 
         return null;
     }
+
+
+    public Node getNode(int id){
+        for(Node nodo: this.elements.keySet()){
+            if (nodo.getId()==id)
+                return nodo;
+        }
+        return null;
+    }
+
+    public ArrayList<Node> getNodes(){
+        ArrayList<Node> nodes= new ArrayList<>();
+        for(Node node: elements.keySet())
+            nodes.add(node);
+        return nodes;
+    }
+
+    public ArrayList<Edge> getEdges(){
+        return edges;
+    }
+    //si soy re sida y lo hago asi nomas
 
 }

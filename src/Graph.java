@@ -1,12 +1,12 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class Graph {
 
     private HashMap<Node, ArrayList<Node>> elements;
     private ArrayList<Edge> edges;
+    ArrayList<ArrayList<Node>> result = new ArrayList<>();
+    ArrayList<Node> visited = new ArrayList<>(); //0: not visited, 1:visited, 2:completed
+    Deque<Node> stack = new LinkedList<>();
 
     private int size;
 
@@ -111,55 +111,55 @@ public class Graph {
         return (ArrayList<Edge>) this.edges.clone();
     }
 
-    public ArrayList<ArrayList<Node>> find_all_cycles(int max){
-        ArrayList<Node> completed = new ArrayList<>();
-        ArrayList<Node> visiting = new ArrayList<>();
-        ArrayList<ArrayList<Node>> result = new ArrayList<>();
-        for(Node node: this.elements.keySet()){
-            result.addAll(this.find_cycles(node, max, completed, visiting));
+
+    public ArrayList<ArrayList<Node>> get_all_cycles(Graph graph, int max){
+
+        ArrayList<Node> nodes = graph.getNodes();
+
+        for (int i = 0; i < nodes.size(); i++) {
+            result.addAll(getCycles(graph, nodes.get(i), max));
         }
 
         return result;
     }
 
-    private ArrayList<ArrayList<Node>> find_cycles(Node node, int max, ArrayList<Node> completed, ArrayList<Node> visiting){
+
+    public ArrayList<ArrayList<Node>> getCycles(Graph graph, Node current_node, int max) {
 
         ArrayList<ArrayList<Node>> result = new ArrayList<>();
-        ArrayList<Node> current_cycle = new ArrayList<>();
+        this.stack.addLast(current_node);
 
-        visiting.add(node);
-        HashSet<Node> stack = new HashSet<>();
+        ArrayList<Node> cycle = new ArrayList<>();
 
-        stack.add(node);
+        while(!stack.isEmpty()){
+            Node top = stack.getLast();
+            boolean found_cycle = false;
 
-        for(Node n: stack){
-            stack.remove(n);
-
-            if(!completed.contains(n)){
-                if (visiting.contains(n)){
-                    if ((3 < current_cycle.size()) && (current_cycle.size() < max)) {
-                        System.out.println("Agrego un ciclo");
-                        result.add(current_cycle);
-                    }
-                    current_cycle = new ArrayList<>();
-                }
-                else{
-                    visiting.add(n);
-                    current_cycle.add(n);
-
-                    for(Node ady: this.elements.get(n)){
-                        if (!visiting.contains(ady))
-                            stack.add(ady);
-                    }
+            if(!visited.contains(top)){
+                visited.add(top);
+                cycle.add(top);
+            }
+            else{
+                System.out.println("Hay un ciclo: " + cycle);
+                found_cycle = true;
+                if ((cycle.size() < max) && (cycle.size() > 3)){
+                    cycle.remove(cycle.size() - 1); // elimino el ultimo, que no hace falta incluirlo.
+//                    System.out.println("Ciclo: " + cycle);
+                    result.add(cycle);
                 }
             }
 
-            completed.add(n);
+            if (!found_cycle){
+                ArrayList<Node> ady = graph.getAdy(top);
+                for (int i = 0; i < ady.size(); i++) {
+                    if(!visited.contains(ady.get(i))){
+                        stack.addLast(top);
+                    }
+                }
+            }
         }
 
         return result;
-
     }
-
 
 }

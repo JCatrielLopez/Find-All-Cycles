@@ -64,8 +64,6 @@ public class Main {
 
 
         System.out.println(" ############################### ");
-        ArrayList<ArrayList<Node>> cycles = graph.find_all_cycles(10);
-
-        System.out.println(cycles);
+        ArrayList<ArrayList<Node>> cycles = graph.get_all_cycles(graph,10);
     }
 }

@@ -95,7 +95,7 @@ public class Main {
 
 
         ArrayList<ArrayList<Node>> cycles = graph.get_all_cycles(test_graph,10);
-        System.out.println("\n\n CICLOSSSSSSSSSSSSS \n\n");
+        System.out.println("#######################");
 
 //        System.out.println(cycles);
 

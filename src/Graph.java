@@ -116,8 +116,8 @@ public class Graph {
 
         ArrayList<Node> nodes = graph.getNodes();
 
-        visited = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
+            visited = new ArrayList<>();
             result.addAll(getCycles(graph, nodes.get(i), max));
         }
 
@@ -131,47 +131,44 @@ public class Graph {
         ArrayList<Node> cycle = new ArrayList<>();
 
         stack.push(current_node);
-
+        System.out.println("Voy a buscar a partir del nodo " + current_node);
         while(!stack.isEmpty()){
             System.out.println("STACK: " + stack);
             Node top = stack.pop();
             System.out.println("NODO ACTUAL: " + top);
             boolean found_cycle = false;
 
-//            System.out.println("Estoy en el nodo: " + top.toString());
-//            System.out.println("Visited: " + visited);
+            System.out.println("VISITED: " + visited);
+            System.out.println(top + " > VISITED");
+            visited.add(top);
 
-            if(!visited.contains(top)){
-                System.out.println("EL NODO NO FUE VISITADO!");
-                visited.add(top);
-                if (cycle.size() < max)
-                    cycle.add(top);
-                else
-                    continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
-            }
-            else {
-                System.out.println("EL NODO SI FUE VISITADO!");
-//                found_cycle = true;
-            }
+            if (cycle.size() < max)
+                cycle.add(top);
+            else
+                continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
 
             ArrayList<Node> ady = graph.getAdy(top);
+            boolean all_v = true;
             for (int i = 0; i < ady.size(); i++) {
                 if(!visited.contains(ady.get(i))){
+                    System.out.println(ady.get(i) + " > STACK");
                     stack.push(ady.get(i));
+                    all_v = false;
                 }
                 else{
                     System.out.println("OJO! YO YA VISITE EL NODO " + ady.get(i));
                     if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 3)){
-                        System.out.println("CICLO!!!!!!!!!!!!!!");
-                        System.out.println("CICLO: " + cycle);
+                        System.out.println("GUARDO UN CICLO");
                         System.out.println("Size: " + cycle.size());
                         result.add(cycle);
                     }
+                    System.out.println("CICLO: " + cycle);
                 }
             }
 
+            if(all_v)
+                cycle.remove(cycle.size() - 1);
             System.out.println("\n");
-//            cycle = new ArrayList<>();
         }
 
         return result;

@@ -4,9 +4,9 @@ public class Graph {
 
     private HashMap<Node, ArrayList<Node>> elements;
     private ArrayList<Edge> edges;
-    ArrayList<ArrayList<Node>> result = new ArrayList<>();
+    ArrayList<Stack<Node>> result = new ArrayList<>();
     ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
-    Deque<Node> stack = new LinkedList<>();
+    Stack<Node> stack = new Stack<>();
 
     private int size;
 
@@ -112,59 +112,73 @@ public class Graph {
     }
 
 
-    public ArrayList<ArrayList<Node>> get_all_cycles(Graph graph, int max){
+    public ArrayList<Stack<Node>> get_all_cycles(Graph graph, int max){
 
         ArrayList<Node> nodes = graph.getNodes();
 
         visited = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
+            visited = new ArrayList<>();
+            System.out.println("Voy a buscar los ciclos a partir del: " + nodes.get(i));
             result.addAll(getCycles(graph, nodes.get(i), max));
+            System.out.println("--------------------------------");
         }
 
         return result;
     }
 
 
-    public ArrayList<ArrayList<Node>> getCycles(Graph graph, Node current_node, int max) {
+    public ArrayList<Stack<Node>> getCycles(Graph graph, Node current_node, int max) {
 
-        ArrayList<ArrayList<Node>> result = new ArrayList<>();
-        ArrayList<Node> cycle = new ArrayList<>();
+        ArrayList<Stack<Node>> result = new ArrayList<>();
+        Stack<Node> cycle = new Stack<>();
 
-        stack.addLast(current_node);
+        stack.push(current_node);
+        cycle.add(current_node);
+
+        boolean found_cycle;
+        int sons;
 
         while(!stack.isEmpty()){
-            Node top = stack.getLast();
-            stack.removeLast();
-            boolean found_cycle = false;
+            sons = 0;
+            System.out.println("STACK: " + stack);
+            Node top = stack.pop();
+            found_cycle = false;
 
-//            System.out.println("Estoy en el nodo: " + top.toString());
-//            System.out.println("Visited: " + visited);
+            System.out.println("NODO ACTUAL: " + top);
+            System.out.println("VISITED: " + visited);
 
             if(!visited.contains(top)){
+                System.out.println("EL NODO ACTUAL NO FUE VISITADO");
                 visited.add(top);
-                if (cycle.size() < max)
-                    cycle.add(top);
+                if ((cycle.size() < max) && !cycle.contains(top))
+                    cycle.push(top);
                 else
-                    continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
+                    if (cycle.size() >= max)
+                        continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
             }
-            else
-                found_cycle = true;
 
-            if (!found_cycle){
-                ArrayList<Node> ady = graph.getAdy(top);
-                for (int i = 0; i < ady.size(); i++) {
-                    if(!visited.contains(ady.get(i))){
-                        stack.addLast(ady.get(i));
-                    }
-                    else{
+            ArrayList<Node> ady = graph.getAdy(top);
+            for (int i = 0; i < ady.size(); i++) {
+                if(!visited.contains(ady.get(i))){
+                    stack.push(ady.get(i));
+                    sons++;
+                }
+                else{
+                    System.out.println("OJO! Yo ya fui al nodo " + ady.get(i));
+                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 3)){
+                        System.out.println("CICLO!!!!!!!!!!!!!!");
                         System.out.println("Cycle size: " + cycle.size());
-                        if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
-//                            System.out.println("\n\n CICLO!!!!!!!!!!!!!!\n" + cycle + "\n\n");
-                            result.add(cycle);
-                        }
+                        result.add(cycle);
                     }
                 }
             }
+
+            if (sons == 0)
+                cycle.pop();
+
+            System.out.println("CICLE: " + cycle);
+            System.out.println("\n");
 
 //            cycle = new ArrayList<>();
         }

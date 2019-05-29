@@ -119,6 +119,7 @@ public class Graph {
         for (int i = 0; i < nodes.size(); i++) {
             visited = new ArrayList<>();
             result.addAll(getCycles(graph, nodes.get(i), max));
+//            graph.removeElement(nodes.get(i));
         }
 
         return result;
@@ -131,7 +132,9 @@ public class Graph {
         ArrayList<Node> cycle = new ArrayList<>();
 
         stack.push(current_node);
+        System.out.println("-----------------------------------------------------");
         System.out.println("Voy a buscar a partir del nodo " + current_node);
+        System.out.println("-----------------------------------------------------");
         while(!stack.isEmpty()){
             System.out.println("STACK: " + stack);
             Node top = stack.pop();
@@ -160,13 +163,18 @@ public class Graph {
                     if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 3)){
                         System.out.println("GUARDO UN CICLO");
                         System.out.println("Size: " + cycle.size());
-                        result.add(cycle);
+                        ArrayList<Node> new_cycle = new ArrayList<>();
+                        for(Node nodo: cycle)
+                            new_cycle.add(nodo);
+                        result.add(new_cycle);
+                        System.out.println("CICLO GUARDADO: " + new_cycle);
+                        cycle = new ArrayList<>();
                     }
-                    System.out.println("CICLO: " + cycle);
+                    System.out.println("CICLO ACTUAL: " + cycle);
                 }
             }
 
-            if(all_v)
+            if(all_v && cycle.size()>0)
                 cycle.remove(cycle.size() - 1);
             System.out.println("\n");
         }

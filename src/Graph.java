@@ -4,8 +4,6 @@ public class Graph {
 
     private HashMap<Node, ArrayList<Node>> elements;
     private ArrayList<Edge> edges;
-    ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
-    Stack<Node> stack = new Stack<>();
 
     private int size;
 
@@ -114,16 +112,22 @@ public class Graph {
     }
 
 
-    public HashSet<HashSet<Node>> get_all_cycles(Graph graph, int max){
+    public HashSet<HashSet<Node>> get_all_cycles(int max){
         long inicio = System.currentTimeMillis();
 
-        HashSet<HashSet<Node>> result = new HashSet<>();
-        ArrayList<Node> nodes = graph.getNodes();
+        ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
+        Stack<Node> stack = new Stack<>();
 
-        for (int i = 0; i < nodes.size(); i++) {
+        Graph aux_graph = this.clone();
+        HashSet<HashSet<Node>> result = new HashSet<>();
+        ArrayList<Node> nodes = aux_graph.getNodes();
+
+        while(!nodes.isEmpty()){
             visited = new ArrayList<>();
-            result.addAll(getCycles(graph, nodes.get(i), max));
-            graph.removeElement(nodes.get(i));
+            result.addAll(getCycles(aux_graph, nodes.get(0), max, visited, stack));
+            aux_graph.removeElement(nodes.get(0));
+            nodes = aux_graph.getNodes();
+            System.gc();
         }
 
         long fin = System.currentTimeMillis();
@@ -132,18 +136,20 @@ public class Graph {
     }
 
 
-    public HashSet<HashSet<Node>> getCycles(Graph graph, Node current_node, int max) {
+    private HashSet<HashSet<Node>> getCycles(Graph graph, Node current_node, int max, ArrayList<Node> visited, Stack<Node> stack) {
 
         //TODO Es asquerosamente ineficiente.
 
         HashSet<HashSet<Node>> result = new HashSet<>();
         HashSet<Node> cycle = new HashSet<>();
+        boolean all_v;
 
         stack.push(current_node);
         System.out.println("-----------------------------------------------------");
         System.out.println("Voy a buscar a partir del nodo " + current_node);
         System.out.println("-----------------------------------------------------");
         while(!stack.isEmpty()){
+            all_v = true;
             System.out.println("STACK: " + stack);
             Node top = stack.peek();
             System.out.println("NODO ACTUAL: " + top);
@@ -166,7 +172,7 @@ public class Graph {
                 continue;
             }
 
-            boolean all_v = true;
+
             for (int i = 0; i < ady.size(); i++) {
                 if(!visited.contains(ady.get(i))){
                     System.out.println(ady.get(i) + " > STACK");
@@ -179,7 +185,7 @@ public class Graph {
                     if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 2)){
                         if(!result.contains(cycle)) {
                             System.out.println("GUARDO UN CICLO");
-                            System.out.println("Size: " + cycle.size());
+//                            System.out.println("Size: " + cycle.size());
                             HashSet<Node> new_cycle = new HashSet<>();
                             for (Node nodo : cycle)
                                 new_cycle.add(nodo);
@@ -191,24 +197,35 @@ public class Graph {
                 }
             }
 
-            System.gc();
-            boolean delete = true;
-            for(Node ady_n: graph.getAdy(top))
-                if (!visited.contains(ady_n))
-                    delete = false;
 
-            if (delete) {
+            // Si no tengo adyacentes para recorrer, lo saco, porque nunca va a formar parte
+            // de un ciclo nuevo!
+            if(all_v && cycle.size()>0){
                 stack.remove(top);
-                cycle.remove(top);
+//                cycle.remove(top);
             }
 
-            if(all_v && cycle.size()>0)
-                cycle.remove(cycle.size() - 1);
-
             System.out.println("\n");
+
         }
 
         return result;
     }
+
+    protected Graph clone(){
+        Graph aux = new Graph();
+
+        for(Node node: this.elements.keySet()){
+            aux.addElement(node);
+        }
+
+        for(Node node: this.elements.keySet()){
+            for(Node ady: this.elements.get(node)){
+                aux.addEdge(node, ady);
+            }
+        }
+        return aux;
+    }
+
 
 }

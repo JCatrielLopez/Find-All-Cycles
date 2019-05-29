@@ -5,7 +5,7 @@ public class Graph {
     private HashMap<Node, ArrayList<Node>> elements;
     private ArrayList<Edge> edges;
     ArrayList<ArrayList<Node>> result = new ArrayList<>();
-    ArrayList<Node> visited = new ArrayList<>(); //0: not visited, 1:visited, 2:completed
+    ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
     Deque<Node> stack = new LinkedList<>();
 
     private int size;
@@ -116,6 +116,7 @@ public class Graph {
 
         ArrayList<Node> nodes = graph.getNodes();
 
+        visited = new ArrayList<>();
         for (int i = 0; i < nodes.size(); i++) {
             result.addAll(getCycles(graph, nodes.get(i), max));
         }
@@ -127,33 +128,36 @@ public class Graph {
     public ArrayList<ArrayList<Node>> getCycles(Graph graph, Node current_node, int max) {
 
         ArrayList<ArrayList<Node>> result = new ArrayList<>();
-        this.stack.addLast(current_node);
-
         ArrayList<Node> cycle = new ArrayList<>();
+
+        stack.addLast(current_node);
 
         while(!stack.isEmpty()){
             Node top = stack.getLast();
+            stack.removeLast();
             boolean found_cycle = false;
+
+            System.out.println("Estoy en el nodo: " + top.toString());
+//            System.out.println("Visited: " + visited);
 
             if(!visited.contains(top)){
                 visited.add(top);
                 cycle.add(top);
             }
-            else{
-                System.out.println("Hay un ciclo: " + cycle);
+            else
                 found_cycle = true;
-                if ((cycle.size() < max) && (cycle.size() > 3)){
-                    cycle.remove(cycle.size() - 1); // elimino el ultimo, que no hace falta incluirlo.
-//                    System.out.println("Ciclo: " + cycle);
-                    result.add(cycle);
-                }
-            }
 
             if (!found_cycle){
                 ArrayList<Node> ady = graph.getAdy(top);
                 for (int i = 0; i < ady.size(); i++) {
                     if(!visited.contains(ady.get(i))){
-                        stack.addLast(top);
+                        stack.addLast(ady.get(i));
+                    }
+                    else{
+                        if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
+//                            System.out.println("\n\n CICLO!!!!!!!!!!!!!!\n" + cycle + "\n\n");
+                            result.add(cycle);
+                        }
                     }
                 }
             }

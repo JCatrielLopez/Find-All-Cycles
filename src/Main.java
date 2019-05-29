@@ -65,5 +65,20 @@ public class Main {
 
         System.out.println(" ############################### ");
         ArrayList<ArrayList<Node>> cycles = graph.get_all_cycles(graph,10);
+        System.out.println("\n\n CICLOSSSSSSSSSSSSS \n\n");
+
+//        System.out.println(cycles);
+
+        System.out.println("Cantidad de ciclos: " + cycles.size());
+        System.out.println(" ----------------------- ");
+        System.out.println(" ----------------------- ");
+        for(ArrayList<Node> ciclo: cycles){
+            System.out.println("Cantidad de nodos: " + ciclo.size());
+            System.out.println(" ----------------------- ");
+            for(Node nodo: ciclo){
+                System.out.println(nodo.toString());
+            }
+            System.out.println(" ----------------------- ");
+        }
     }
 }

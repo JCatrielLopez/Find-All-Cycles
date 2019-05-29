@@ -137,12 +137,15 @@ public class Graph {
             stack.removeLast();
             boolean found_cycle = false;
 
-            System.out.println("Estoy en el nodo: " + top.toString());
+//            System.out.println("Estoy en el nodo: " + top.toString());
 //            System.out.println("Visited: " + visited);
 
             if(!visited.contains(top)){
                 visited.add(top);
-                cycle.add(top);
+                if (cycle.size() < max)
+                    cycle.add(top);
+                else
+                    continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
             }
             else
                 found_cycle = true;
@@ -154,6 +157,7 @@ public class Graph {
                         stack.addLast(ady.get(i));
                     }
                     else{
+                        System.out.println("Cycle size: " + cycle.size());
                         if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
 //                            System.out.println("\n\n CICLO!!!!!!!!!!!!!!\n" + cycle + "\n\n");
                             result.add(cycle);
@@ -161,6 +165,8 @@ public class Graph {
                     }
                 }
             }
+
+//            cycle = new ArrayList<>();
         }
 
         return result;

@@ -208,7 +208,6 @@ public class Graph {
             System.out.println("\n");
         }
 
-        reader.close();
         return result;
     }
 

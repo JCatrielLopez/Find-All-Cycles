@@ -4,7 +4,6 @@ public class Graph {
 
     private HashMap<Node, ArrayList<Node>> elements;
     private ArrayList<Edge> edges;
-    ArrayList<ArrayList<Node>> result = new ArrayList<>();
     ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
     Stack<Node> stack = new Stack<>();
 
@@ -29,11 +28,14 @@ public class Graph {
             size--;
         }
 
-        for(Edge edge: this.edges){
-            if (edge.contains(name)){
-                this.edges.remove(edge);
+        ArrayList<Edge> new_edges = new ArrayList<>();
+
+        for (int i = 0; i < this.edges.size(); i++) {
+            if (!edges.get(i).contains(name)){
+                new_edges.add(edges.get(i));
             }
         }
+        this.edges = new_edges;
     }
 
     public void addEdge(Node first, Node end){
@@ -112,24 +114,30 @@ public class Graph {
     }
 
 
-    public ArrayList<ArrayList<Node>> get_all_cycles(Graph graph, int max){
+    public HashSet<HashSet<Node>> get_all_cycles(Graph graph, int max){
+        long inicio = System.currentTimeMillis();
 
+        HashSet<HashSet<Node>> result = new HashSet<>();
         ArrayList<Node> nodes = graph.getNodes();
 
         for (int i = 0; i < nodes.size(); i++) {
             visited = new ArrayList<>();
             result.addAll(getCycles(graph, nodes.get(i), max));
-//            graph.removeElement(nodes.get(i));
+            graph.removeElement(nodes.get(i));
         }
 
+        long fin = System.currentTimeMillis();
+        System.out.println("Demora de busqueda de ciclos (milis): " + (fin - inicio));
         return result;
     }
 
 
-    public ArrayList<ArrayList<Node>> getCycles(Graph graph, Node current_node, int max) {
+    public HashSet<HashSet<Node>> getCycles(Graph graph, Node current_node, int max) {
 
-        ArrayList<ArrayList<Node>> result = new ArrayList<>();
-        ArrayList<Node> cycle = new ArrayList<>();
+        //TODO Es asquerosamente ineficiente.
+
+        HashSet<HashSet<Node>> result = new HashSet<>();
+        HashSet<Node> cycle = new HashSet<>();
 
         stack.push(current_node);
         System.out.println("-----------------------------------------------------");
@@ -137,7 +145,7 @@ public class Graph {
         System.out.println("-----------------------------------------------------");
         while(!stack.isEmpty()){
             System.out.println("STACK: " + stack);
-            Node top = stack.pop();
+            Node top = stack.peek();
             System.out.println("NODO ACTUAL: " + top);
             boolean found_cycle = false;
 
@@ -145,12 +153,19 @@ public class Graph {
             System.out.println(top + " > VISITED");
             visited.add(top);
 
-            if (cycle.size() < max)
+            if (cycle.size() <= max)
                 cycle.add(top);
             else
                 continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
 
             ArrayList<Node> ady = graph.getAdy(top);
+
+            if(ady == null) {
+                cycle.remove(top);
+                stack.pop();
+                continue;
+            }
+
             boolean all_v = true;
             for (int i = 0; i < ady.size(); i++) {
                 if(!visited.contains(ady.get(i))){
@@ -160,25 +175,40 @@ public class Graph {
                 }
                 else{
                     System.out.println("OJO! YO YA VISITE EL NODO " + ady.get(i));
-                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 3)){
-                        System.out.println("GUARDO UN CICLO");
-                        System.out.println("Size: " + cycle.size());
-                        ArrayList<Node> new_cycle = new ArrayList<>();
-                        for(Node nodo: cycle)
-                            new_cycle.add(nodo);
-                        result.add(new_cycle);
-                        System.out.println("CICLO GUARDADO: " + new_cycle);
-                        cycle = new ArrayList<>();
-                    }
                     System.out.println("CICLO ACTUAL: " + cycle);
+                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 2)){
+                        if(!result.contains(cycle)) {
+                            System.out.println("GUARDO UN CICLO");
+                            System.out.println("Size: " + cycle.size());
+                            HashSet<Node> new_cycle = new HashSet<>();
+                            for (Node nodo : cycle)
+                                new_cycle.add(nodo);
+                            result.add(new_cycle);
+                            System.out.println("CICLO GUARDADO: " + new_cycle);
+                            cycle = new HashSet<>();
+                        }
+                    }
                 }
+            }
+
+            System.gc();
+            boolean delete = true;
+            for(Node ady_n: graph.getAdy(top))
+                if (!visited.contains(ady_n))
+                    delete = false;
+
+            if (delete) {
+                stack.remove(top);
+                cycle.remove(top);
             }
 
             if(all_v && cycle.size()>0)
                 cycle.remove(cycle.size() - 1);
+
             System.out.println("\n");
         }
 
+        reader.close();
         return result;
     }
 

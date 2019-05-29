@@ -35,5 +35,13 @@ public class Edge {
     public boolean contains(Node node){
         return (first.equals(node)|| second.equals(node));
     }
+
+    @Override
+    public String toString() {
+        return "(" +
+                "first=" + first +
+                ", second=" + second +
+                ')';
+    }
 }
 

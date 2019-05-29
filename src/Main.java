@@ -64,7 +64,37 @@ public class Main {
 
 
         System.out.println(" ############################### ");
-        ArrayList<ArrayList<Node>> cycles = graph.get_all_cycles(graph,10);
+
+        Graph test_graph = new Graph();
+
+        Node nodo_1 = new Node("1");
+        Node nodo_2 = new Node("2");
+        Node nodo_3 = new Node("3");
+        Node nodo_4 = new Node("4");
+        Node nodo_5 = new Node("5");
+        Node nodo_6 = new Node("6");
+
+
+
+        test_graph.addElement(nodo_1);
+        test_graph.addElement(nodo_2);
+        test_graph.addElement(nodo_3);
+        test_graph.addElement(nodo_4);
+        test_graph.addElement(nodo_5);
+        test_graph.addElement(nodo_6);
+
+
+        test_graph.addEdge(nodo_1, nodo_2);
+        test_graph.addEdge(nodo_2, nodo_3);
+        test_graph.addEdge(nodo_3, nodo_1);
+        test_graph.addEdge(nodo_2, nodo_4);
+        test_graph.addEdge(nodo_2, nodo_6);
+        test_graph.addEdge(nodo_4, nodo_5);
+        test_graph.addEdge(nodo_6, nodo_5);
+        test_graph.addEdge(nodo_5, nodo_6);
+
+
+        ArrayList<ArrayList<Node>> cycles = graph.get_all_cycles(test_graph,10);
         System.out.println("\n\n CICLOSSSSSSSSSSSSS \n\n");
 
 //        System.out.println(cycles);

@@ -6,7 +6,7 @@ public class Graph {
     private ArrayList<Edge> edges;
     ArrayList<ArrayList<Node>> result = new ArrayList<>();
     ArrayList<Node> visited; //0: not visited, 1:visited, 2:completed
-    Deque<Node> stack = new LinkedList<>();
+    Stack<Node> stack = new Stack<>();
 
     private int size;
 
@@ -130,38 +130,42 @@ public class Graph {
         ArrayList<ArrayList<Node>> result = new ArrayList<>();
         ArrayList<Node> cycle = new ArrayList<>();
 
-        stack.addLast(current_node);
+        stack.push(current_node);
 
         while(!stack.isEmpty()){
-            Node top = stack.getLast();
-            stack.removeLast();
+            System.out.println("STACK: " + stack);
+            Node top = stack.pop();
+            System.out.println("NODO ACTUAL: " + top);
             boolean found_cycle = false;
 
 //            System.out.println("Estoy en el nodo: " + top.toString());
 //            System.out.println("Visited: " + visited);
 
             if(!visited.contains(top)){
+                System.out.println("EL NODO NO FUE VISITADO!");
                 visited.add(top);
                 if (cycle.size() < max)
                     cycle.add(top);
                 else
                     continue; // Si ya llegue a un numero de nodos superior al maximo, no tiene sentido continuar.
             }
-            else
-                found_cycle = true;
+            else {
+                System.out.println("EL NODO SI FUE VISITADO!");
+//                found_cycle = true;
+            }
 
-            if (!found_cycle){
-                ArrayList<Node> ady = graph.getAdy(top);
-                for (int i = 0; i < ady.size(); i++) {
-                    if(!visited.contains(ady.get(i))){
-                        stack.addLast(ady.get(i));
-                    }
-                    else{
-                        System.out.println("Cycle size: " + cycle.size());
-                        if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
-//                            System.out.println("\n\n CICLO!!!!!!!!!!!!!!\n" + cycle + "\n\n");
-                            result.add(cycle);
-                        }
+            ArrayList<Node> ady = graph.getAdy(top);
+            for (int i = 0; i < ady.size(); i++) {
+                if(!visited.contains(ady.get(i))){
+                    stack.push(ady.get(i));
+                }
+                else{
+                    System.out.println("OJO! YO YA VISITE EL NODO " + ady.get(i));
+                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
+                        System.out.println("CICLO!!!!!!!!!!!!!!");
+                        System.out.println("CICLO: " + cycle);
+                        System.out.println("Size: " + cycle.size());
+                        result.add(cycle);
                     }
                 }
             }

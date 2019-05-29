@@ -161,7 +161,7 @@ public class Graph {
                 }
                 else{
                     System.out.println("OJO! YO YA VISITE EL NODO " + ady.get(i));
-                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() > 3)){
+                    if (ady.get(i).equals(current_node) && (cycle.size() < max) && (cycle.size() >= 3)){
                         System.out.println("CICLO!!!!!!!!!!!!!!");
                         System.out.println("CICLO: " + cycle);
                         System.out.println("Size: " + cycle.size());
@@ -170,6 +170,7 @@ public class Graph {
                 }
             }
 
+            System.out.println("\n");
 //            cycle = new ArrayList<>();
         }
 

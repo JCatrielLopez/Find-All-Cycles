@@ -47,8 +47,8 @@ public class Graph2 {
     public void addEdge(Node first, Node end) {
         if ((this.nodos.contains(first) && this.nodos.contains(end))) {
             boolean added= first.addAdy(end);
-            if (added)
-                edges.add(new Arco(first, end));
+
+            edges.add(new Arco(first, end));
         }
 
     }
@@ -56,6 +56,7 @@ public class Graph2 {
 
 
     public void print() {
+        System.out.println("GRAFO ");
         for (Node nodo : nodos) {
             nodo.print();
             System.out.println(" -------------------------- ");
@@ -104,6 +105,7 @@ public class Graph2 {
     public int cantArcos() {
         return  edges.size();
     }
+
 
 }
 

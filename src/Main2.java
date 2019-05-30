@@ -107,8 +107,9 @@ public class Main2 {
         //System.out.println("GRAFO: ");
         //graph.print();
 
+        int max=3;
         Johnson j= new Johnson();
-        List<List<Node>> allCycles = j.simpleCyles(test_graph);
+        List<List<Node>> allCycles = j.simpleCyles(test_graph, max);
 
         long fin2 = System.currentTimeMillis();
         System.out.println("Demora de busqueda de ciclos (milis): " + (fin2 - inicio2));
@@ -116,7 +117,7 @@ public class Main2 {
 
         allCycles.forEach(cycle -> {
             StringJoiner joiner = new StringJoiner("->");
-            cycle.forEach(vertex -> joiner.add(String.valueOf(vertex.getId())));
+            cycle.forEach(vertex -> joiner.add(vertex.toString()));
             System.out.println(joiner);
         });
     }

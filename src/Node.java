@@ -73,4 +73,8 @@ public class Node {
     public boolean containsAdy(Node n) {
         return adyacentes.contains(n);
     }
+
+    public void clear() {
+        adyacentes.clear();
+    }
 }

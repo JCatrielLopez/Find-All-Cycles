@@ -44,11 +44,14 @@ public class Johnson {
         Graph2 subGraph = new Graph2();
         for (Arco edge : graph.edges) {
             if (edge.getNode1().getId() >= startVertex && edge.getNode2().getId() >= startVertex) {
-                graph.removeElement(graph.getNodeID(startVertex - 1));
                 subGraph.addElement(edge.getNode1());
                 subGraph.addElement(edge.getNode2());
                 subGraph.addEdge(edge.getNode1(), edge.getNode2());
             }
+            else if (edge.getNode1().getId() < startVertex)
+                graph.removeElement(edge.getNode1());
+            else if (edge.getNode2().getId() < startVertex)
+                graph.removeElement(edge.getNode2());
         }
 
         return subGraph;
@@ -109,11 +112,12 @@ public class Johnson {
         boolean foundCycle = false;
         stack.push(currentNode);
         blockedSet.add(currentNode);
+        boolean m=false;
 
         for (Node ady : currentNode.adyacentes) {
             //if ady is same as start vertex means cycle is found.
             //Store contents of stack in final result.
-            if (ady == startNode && stack.size() > 2 ) {
+            if (ady == startNode && stack.size() > 2 && stack.size() <= max ) {
                 List<Node> cycle = new ArrayList();
                 cycle.addAll(stack);
                 Collections.reverse(cycle);
@@ -121,8 +125,10 @@ public class Johnson {
                 foundCycle = true;
             } //explore this ady only if it is not in blockedSet.
             else {
-                if (stack.size() > max)
+                if (stack.size() > max) {
+                    m=true;
                     break;
+                }
 
                 if (!blockedSet.contains(ady)) {
                     boolean gotCycle =
@@ -132,7 +138,7 @@ public class Johnson {
             }
         }
         //if cycle is found with current vertex then recursively unblock vertex and all vertices which are dependent on this vertex.
-        if (foundCycle) {
+        if (foundCycle || m) {
             //remove from blockedSet  and then remove all the other vertices dependent on this vertex from blockedSet
             unblock(currentNode);
         } else {

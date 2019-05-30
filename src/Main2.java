@@ -13,7 +13,7 @@ public class Main2 {
     }
 
     public static void main(String[] args) {
-/*
+
         long inicio = System.currentTimeMillis();
 
 
@@ -69,8 +69,8 @@ public class Main2 {
 
         long fin = System.currentTimeMillis();
         System.out.println("Demora de generacion de grafo (milis): " + (fin - inicio));
-*/
-        Graph2 test_graph= new Graph2();
+
+ /*       Graph2 test_graph= new Graph2();
 
         Node nodo_1 = new Node("1");
         Node nodo_2 = new Node("2");
@@ -98,27 +98,30 @@ public class Main2 {
         test_graph.addEdge(nodo_6, nodo_5);
         test_graph.addEdge(nodo_4, nodo_6);
         test_graph.addEdge(nodo_4, nodo_1);
-
+*/
         long inicio2 = System.currentTimeMillis();
 
-        System.out.println("cant vertices: "+ test_graph.cantNodos());
-        System.out.println("cant arcos: "+ test_graph.cantArcos());
+        System.out.println("cant vertices: "+ graph.cantNodos());
+        System.out.println("cant arcos: "+ graph.cantArcos());
 
         //System.out.println("GRAFO: ");
         //graph.print();
 
-        int max=3;
+        int max=8;
         Johnson j= new Johnson();
-        List<List<Node>> allCycles = j.simpleCyles(test_graph, max);
+        List<List<Node>> allCycles = j.simpleCyles(graph, max);
 
         long fin2 = System.currentTimeMillis();
-        System.out.println("Demora de busqueda de ciclos (milis): " + (fin2 - inicio2));
-        System.out.println("cant ciclos: "+ allCycles.size());
+        long time = fin2-inicio2;
+        System.out.println("Demora de busqueda de ciclos (milis): " + time);
+
 
         allCycles.forEach(cycle -> {
             StringJoiner joiner = new StringJoiner("->");
             cycle.forEach(vertex -> joiner.add(vertex.toString()));
             System.out.println(joiner);
         });
+        System.out.println("cant ciclos: "+ allCycles.size());
+        System.out.println("TIEMPO DE BUSQUEDA DE CICLOS: "+ time);
     }
 }

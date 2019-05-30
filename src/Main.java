@@ -1,11 +1,51 @@
 import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Main {
 
-    private void save_to_file(ArrayList<ArrayList<Node>> cycles){
+    private static final int MAXLINEAS=1000;
+
+    private static void save_to_file(ArrayList<ArrayList<Node>> cycles) {
+        FileWriter fw=null;
+        try{
+        File file = new File("ciclos.txt");
+        if (!file.exists())
+            file.createNewFile();
+        fw= new FileWriter(file);
+
+        int i=0;
+        StringBuilder ciclos= new StringBuilder();
+        for(ArrayList<Node> cycle: cycles){
+            for(Node n: cycle){
+                ciclos.append(n.toString()+";");
+            }
+            i++;
+            ciclos.append("\n");
+
+            //para no quedarme sin memoria, cada cierta cantidad de lineas las guardo en el archivo y reseteo el string builder
+            if (i==MAXLINEAS){
+                fw.append(ciclos);
+                ciclos.setLength(0);
+            }
+        }
+            fw.append(ciclos);
+
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+        finally {
+            try{
+                if (fw!=null)
+                    fw.close();
+            }
+            catch (IOException e){
+                System.out.println("Error cerrando el archivo");
+            }
+
+        }
 
     }
 
@@ -16,6 +56,8 @@ public class Main {
         Scanner reader = new Scanner(System.in);
         System.out.println("Ingrese ruta del odem: ");
         String odem= reader.next();
+        System.out.println("Ingrese longitud maxima de ciclos: ");
+        int max=reader.nextInt();
         reader.close();
 
         UserHandler my_handler = new UserHandler();
@@ -78,8 +120,6 @@ public class Main {
         System.out.println("cant arcos: "+ graph.cantArcos());
 
 
-
-        int max=3;
         Johnson j= new Johnson();
         ArrayList<ArrayList<Node>> allCycles = j.simpleCyles(graph, max);
 
@@ -87,14 +127,15 @@ public class Main {
 
         long time = finCiclos-inicioCiclos;
 
-
-        allCycles.forEach(cycle -> {
-            StringJoiner joiner = new StringJoiner("->");
-            cycle.forEach(vertex -> joiner.add(vertex.toString()));
-            System.out.println(joiner);
-        });
-
         System.out.println("cant ciclos: "+ allCycles.size());
         System.out.println("TIEMPO DE BUSQUEDA DE CICLOS: "+ time);
+
+        long inicioArchivo = System.currentTimeMillis();
+
+        save_to_file(allCycles);
+
+        long finArchivo = System.currentTimeMillis();
+
+        System.out.println("TIEMPO DE GENERACION DEL ARCHIVO: "+ (finArchivo-inicioArchivo));
     }
 }

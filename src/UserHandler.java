@@ -10,11 +10,11 @@ public class UserHandler extends DefaultHandler {
     boolean type = false;
     boolean depends_on = false;
 
-    HashMap<String, String> packages = new HashMap<>();
-    HashMap<String, ArrayList<String>> dependencies = new HashMap<>();
-    HashMap<String, ArrayList<String>> pkg_dep = new HashMap<>();
-    String current_pkg;
-    String current_class;
+    private HashMap<String, String> packages = new HashMap<>();
+    private HashMap<String, ArrayList<String>> dependencies = new HashMap<>();
+    private HashMap<String, ArrayList<String>> pkg_dep = new HashMap<>();
+    private String current_pkg;
+    private String current_class;
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -55,7 +55,7 @@ public class UserHandler extends DefaultHandler {
 
     }
 
-    public HashMap getPKGS(){
+    public HashMap<String, ArrayList<String>> getPKGS(){
 
         for(String clase: this.dependencies.keySet()){
             if (!this.pkg_dep.containsKey(this.packages.get(clase)))

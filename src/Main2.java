@@ -1,10 +1,7 @@
 import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class Main2 {
 
@@ -14,16 +11,22 @@ public class Main2 {
 
     public static void main(String[] args) {
 
-        long inicio = System.currentTimeMillis();
 
+
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Ingrese ruta del odem: ");
+        String odem= reader.next();
+        reader.close();
 
         UserHandler my_handler = new UserHandler();
         ODEMSAXParser parser;
 
+        long inicio = System.currentTimeMillis();
+
         try {
 
             parser = new ODEMSAXParser(my_handler,
-                    "odems/apache-cxf-2.0.6.odem");
+                    odem);
             parser.parse();
 
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -33,15 +36,13 @@ public class Main2 {
 
         HashMap<String, ArrayList<String>> pkgs = my_handler.getPKGS();
 
-        Graph2 graph = new Graph2();
+        Graph graph = new Graph();
 
 
-
-        long i=0;
         for (String pkg : pkgs.keySet()) {
             Node node;
             if (graph.contains(pkg)) {
-                node = graph.get(pkg);
+                node = graph.getNodeByName(pkg);
             }
             else{
             node = new Node(pkg);
@@ -52,7 +53,7 @@ public class Main2 {
                 if ((pkg_ady != null)) {
                     Node ady;
                     if (graph.contains(pkg_ady)) {
-                        ady = graph.get(pkg_ady);
+                        ady = graph.getNodeByName(pkg_ady);
                     } else {
                         ady = new Node(pkg_ady);
                         graph.addElement(ady);
@@ -70,50 +71,21 @@ public class Main2 {
         long fin = System.currentTimeMillis();
         System.out.println("Demora de generacion de grafo (milis): " + (fin - inicio));
 
- /*       Graph2 test_graph= new Graph2();
 
-        Node nodo_1 = new Node("1");
-        Node nodo_2 = new Node("2");
-        Node nodo_3 = new Node("3");
-        Node nodo_4 = new Node("4");
-        Node nodo_5 = new Node("5");
-        Node nodo_6 = new Node("6");
-
-
-
-        test_graph.addElement(nodo_1);
-        test_graph.addElement(nodo_2);
-        test_graph.addElement(nodo_3);
-        test_graph.addElement(nodo_4);
-        test_graph.addElement(nodo_5);
-        test_graph.addElement(nodo_6);
-
-
-        test_graph.addEdge(nodo_1, nodo_2);
-        test_graph.addEdge(nodo_2, nodo_3);
-        test_graph.addEdge(nodo_1, nodo_3);
-        test_graph.addEdge(nodo_2, nodo_5);
-        test_graph.addEdge(nodo_5, nodo_4);
-        test_graph.addEdge(nodo_3, nodo_4);
-        test_graph.addEdge(nodo_6, nodo_5);
-        test_graph.addEdge(nodo_4, nodo_6);
-        test_graph.addEdge(nodo_4, nodo_1);
-*/
-        long inicio2 = System.currentTimeMillis();
+        long inicioCiclos = System.currentTimeMillis();
 
         System.out.println("cant vertices: "+ graph.cantNodos());
         System.out.println("cant arcos: "+ graph.cantArcos());
 
-        //System.out.println("GRAFO: ");
-        //graph.print();
 
-        int max=8;
+
+        int max=3;
         Johnson j= new Johnson();
-        List<List<Node>> allCycles = j.simpleCyles(graph, max);
+        ArrayList<ArrayList<Node>> allCycles = j.simpleCyles(graph, max);
 
-        long fin2 = System.currentTimeMillis();
-        long time = fin2-inicio2;
-        System.out.println("Demora de busqueda de ciclos (milis): " + time);
+        long finCiclos = System.currentTimeMillis();
+
+        long time = finCiclos-inicioCiclos;
 
 
         allCycles.forEach(cycle -> {
@@ -121,6 +93,7 @@ public class Main2 {
             cycle.forEach(vertex -> joiner.add(vertex.toString()));
             System.out.println(joiner);
         });
+
         System.out.println("cant ciclos: "+ allCycles.size());
         System.out.println("TIEMPO DE BUSQUEDA DE CICLOS: "+ time);
     }

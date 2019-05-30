@@ -19,14 +19,25 @@ public class Node {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
+    public void removeAdy(Node nodo) {
+        adyacentes.remove(nodo);
+    }
+
+    public void addAdy(Node nodo) {
+        adyacentes.add(nodo);
+    }
+
+    public boolean containsAdy(Node n) {
+        return adyacentes.contains(n);
+    }
+
+    public HashSet<Node> getAdyacentes(){
+        return adyacentes;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -38,43 +49,12 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 
-//    @Override
-//    public String toString() {
-//        return this.id + " (" + this.name + ")";
-//    }
-
+    @Override
     public String toString() {
         return this.name;
     }
 
-    public boolean removeAdy(Node nodo) {
-        boolean deleted=false;
-        if (adyacentes.contains(nodo)) {
-            deleted= adyacentes.remove(nodo);
-        }
-        return deleted;
-    }
-
-    public boolean addAdy(Node nodo) {
-        return adyacentes.add(nodo);
-    }
-
-    public void print() {
-        System.out.println("NODO: " + this.toString());
-        System.out.println("ADYACENTES: ");
-        for (Node ady : adyacentes) {
-            System.out.println(ady.toString());
-        }
-    }
-
-    public boolean containsAdy(Node n) {
-        return adyacentes.contains(n);
-    }
-
-    public void clear() {
-        adyacentes.clear();
-    }
 }

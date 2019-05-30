@@ -3,7 +3,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.*;
 
-public class Main2 {
+public class Main {
 
     private void save_to_file(ArrayList<ArrayList<Node>> cycles){
 

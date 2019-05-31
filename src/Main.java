@@ -21,7 +21,7 @@ public class Main {
 
         for (int i = 0; i < cycles.size(); i++) {
             for (int j = 0; j < cycles.get(i).size(); j++) {
-                bw.write(cycles.get(i).get(j) + "->"); //Queda un -> al final de cada ciclo!
+                bw.write(cycles.get(i).get(j) + ";"); //Queda un -> al final de cada ciclo!
             }
             bw.write("\n");
             bw.flush();

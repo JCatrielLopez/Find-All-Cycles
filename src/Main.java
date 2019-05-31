@@ -1,51 +1,37 @@
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Main {
 
-    private static final int MAXLINEAS=250;
+//    private static final int MAXLINEAS=250;
 
-    private static void save_to_file(ArrayList<ArrayList<Node>> cycles) {
-        FileWriter fw=null;
-        try{
-        File file = new File("ciclos.txt");
-        if (!file.exists())
-            file.createNewFile();
-        fw= new FileWriter(file);
+    public static void save(ArrayList<ArrayList<Node>> cycles) throws IOException {
 
-        //int i=0;
-        //StringBuilder ciclos= new StringBuilder();
-        for(ArrayList<Node> cycle: cycles){
-            for(Node n: cycle) {
-                //ciclos.write(n.toString()).append(";");
-                fw.write(n.toString()+";");
+        FileOutputStream fos = new FileOutputStream("resultado.txt");
+        OutputStreamWriter w = new OutputStreamWriter(fos, "UTF-8");
+        BufferedWriter bw = new BufferedWriter(w);
 
+        for (int i = 0; i < cycles.size(); i++) {
+            for (int j = 0; j < cycles.get(i).size(); j++) {
+                bw.write(cycles.get(i).get(j) + "->"); //Queda un -> al final de cada ciclo!
             }
-            fw.write("\n");
-
-        }
-            //fw.append(ciclos);
-
-        }
-        catch (IOException ioe){
-            ioe.printStackTrace();
-        }
-        finally {
-            try{
-                if (fw!=null)
-                    fw.close();
-            }
-            catch (IOException e){
-                System.out.println("Error cerrando el archivo");
-            }
-
+            bw.write("\n");
+            bw.flush();
         }
 
+        bw.close();
+        System.out.println("Se guardo el archivo!");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
 
 
@@ -128,7 +114,7 @@ public class Main {
 
         long inicioArchivo = System.currentTimeMillis();
 
-        save_to_file(allCycles);
+        save(allCycles);
         long finArchivo = System.currentTimeMillis();
 
         System.out.println("TIEMPO DE GENERACION DEL ARCHIVO: "+ (finArchivo-inicioArchivo));

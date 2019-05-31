@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Main {
 
-    private static final int MAXLINEAS=1000;
+    private static final int MAXLINEAS=250;
 
     private static void save_to_file(ArrayList<ArrayList<Node>> cycles) {
         FileWriter fw=null;
@@ -15,22 +15,18 @@ public class Main {
             file.createNewFile();
         fw= new FileWriter(file);
 
-        int i=0;
-        StringBuilder ciclos= new StringBuilder();
+        //int i=0;
+        //StringBuilder ciclos= new StringBuilder();
         for(ArrayList<Node> cycle: cycles){
-            for(Node n: cycle){
-                ciclos.append(n.toString()+";");
-            }
-            i++;
-            ciclos.append("\n");
+            for(Node n: cycle) {
+                //ciclos.write(n.toString()).append(";");
+                fw.write(n.toString()+";");
 
-            //para no quedarme sin memoria, cada cierta cantidad de lineas las guardo en el archivo y reseteo el string builder
-            if (i==MAXLINEAS){
-                fw.append(ciclos);
-                ciclos.setLength(0);
             }
+            fw.write("\n");
+
         }
-            fw.append(ciclos);
+            //fw.append(ciclos);
 
         }
         catch (IOException ioe){
@@ -133,7 +129,6 @@ public class Main {
         long inicioArchivo = System.currentTimeMillis();
 
         save_to_file(allCycles);
-
         long finArchivo = System.currentTimeMillis();
 
         System.out.println("TIEMPO DE GENERACION DEL ARCHIVO: "+ (finArchivo-inicioArchivo));
